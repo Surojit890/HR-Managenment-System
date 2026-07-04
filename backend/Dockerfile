@@ -34,4 +34,4 @@ RUN npm install prisma@5.22.0 && npm install -g tsx@4.19.2
 
 EXPOSE 3001
 
-CMD ["sh", "-c", "npx prisma db push --accept-data-loss && npx prisma db seed && node dist/src/main.js"]
+CMD ["sh", "-c", "npx prisma migrate deploy && node dist/src/main.js"]

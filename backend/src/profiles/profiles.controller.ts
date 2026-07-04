@@ -10,30 +10,23 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { extname, join } from 'path';
+import { memoryStorage } from 'multer';
 import { ApiTags, ApiBearerAuth, ApiOperation, ApiConsumes, ApiBody } from '@nestjs/swagger';
 import { ProfilesService } from './profiles.service';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
-
-const avatarStorage = diskStorage({
-  destination: (_req, _file, cb) => {
-    cb(null, join(process.cwd(), 'uploads', 'avatars'));
-  },
-  filename: (_req, file, cb) => {
-    const unique = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    cb(null, unique + extname(file.originalname));
-  },
-});
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
 
 @ApiTags('profiles')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @Controller('profiles')
 export class ProfilesController {
-  constructor(private readonly profilesService: ProfilesService) {}
+  constructor(
+    private readonly profilesService: ProfilesService,
+    private readonly cloudinaryService: CloudinaryService,
+  ) {}
 
   @ApiOperation({ summary: 'Get current user profile' })
   @Get('me')
@@ -60,7 +53,7 @@ export class ProfilesController {
   })
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: avatarStorage,
+      storage: memoryStorage(),
       limits: { fileSize: 5 * 1024 * 1024 },
       fileFilter: (_req, file, cb) => {
         if (!file.mimetype.startsWith('image/')) {
@@ -71,12 +64,12 @@ export class ProfilesController {
     }),
   )
   @Post('me/avatar')
-  uploadAvatar(
+  async uploadAvatar(
     @CurrentUser() user: { id: string },
     @UploadedFile() file: Express.Multer.File,
   ) {
     if (!file) throw new BadRequestException('No file uploaded');
-    const avatarUrl = `/uploads/avatars/${file.filename}`;
-    return this.profilesService.updateAvatar(user.id, avatarUrl);
+    const result = await this.cloudinaryService.uploadImage(file);
+    return this.profilesService.updateAvatar(user.id, result.secure_url);
   }
 }

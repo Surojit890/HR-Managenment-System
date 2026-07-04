@@ -7,11 +7,13 @@ import { ProfilesModule } from "./profiles/profiles.module";
 import { AttendanceModule } from "./attendance/attendance.module";
 import { LeaveModule } from "./leave/leave.module";
 import { PayrollModule } from "./payroll/payroll.module";
+import { CloudinaryModule } from "./cloudinary/cloudinary.module";
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     PrismaModule,
+    CloudinaryModule,
     AuthModule,
     UsersModule,
     ProfilesModule,

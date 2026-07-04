@@ -1,22 +1,4 @@
 services:
-  postgres:
-    image: postgres:16-alpine
-    container_name: hrms_db
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: hrms_db
-    ports:
-      - "5434:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-
   mailpit:
     image: axllent/mailpit:latest
     container_name: hrms_mail
@@ -32,12 +14,10 @@ services:
     container_name: hrms_backend
     restart: unless-stopped
     depends_on:
-      postgres:
-        condition: service_healthy
       mailpit:
         condition: service_started
     environment:
-      DATABASE_URL: "postgresql://postgres:password@postgres:5432/hrms_db"
+      DATABASE_URL: "postgresql://postgres.[PROJECT_REF]:[PASSWORD]@aws-1-[REGION].pooler.supabase.com:5432/postgres"
       JWT_SECRET: "hrms_dev_secret_key_2026"
       JWT_REFRESH_SECRET: "hrms_dev_refresh_secret_2026"
       JWT_EXPIRES_IN: "15m"
@@ -48,10 +28,9 @@ services:
       SMTP_PORT: "1025"
       SMTP_FROM: "noreply@hrms.com"
       APP_NAME: "HRMS"
+      CLOUDINARY_URL: "cloudinary://[API_KEY]:[API_SECRET]@[CLOUD_NAME]"
     ports:
       - "3001:3001"
-    volumes:
-      - uploads:/app/uploads
 
   frontend:
     build:
@@ -66,7 +45,3 @@ services:
       API_URL: "http://backend:3001"
     ports:
       - "3000:3000"
-
-volumes:
-  pgdata:
-  uploads:
