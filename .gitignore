@@ -1,0 +1,48 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build outputs
+.next/
+dist/
+build/
+out/
+
+# Environment files – never commit secrets
+.env
+.env.local
+.env.*.local
+# .env.example is intentionally NOT ignored (safe template)
+
+# Prisma – migrations MUST be committed (schema history)
+# backend/prisma/migrations/ ← do NOT ignore
+
+images/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# IDE / OS
+.DS_Store
+.idea/
+Thumbs.db
+
+# Keys / certs
+*.pem
+*.key
+*.cert
+
+# Vercel / Next.js
+.vercel
+*.tsbuildinfo
+next-env.d.ts

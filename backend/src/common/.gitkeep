@@ -1,0 +1,3 @@
+// TODO: guards/roles.guard.ts  – RBAC guard (Admin, HR, Employee)
+// TODO: decorators/roles.decorator.ts  – @Roles() decorator
+// TODO: filters/http-exception.filter.ts  – global exception filter
