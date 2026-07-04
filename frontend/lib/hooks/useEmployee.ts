@@ -6,6 +6,7 @@ import { getAttendance, checkIn, checkOut } from "@/lib/api/attendance";
 import { getLeaveRequests, createLeaveRequest } from "@/lib/api/leave";
 import { getMyPayroll } from "@/lib/api/payroll";
 import type { UpdateProfileData, CreateLeaveData } from "@/lib/api";
+import { toast } from "@/lib/hooks/use-toast";
 
 // ─── Profile ────────────────────────────────────────────────────────────────
 
@@ -22,6 +23,7 @@ export function useUpdateProfile() {
     mutationFn: (data: UpdateProfileData) => updateMyProfile(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["profile", "me"] });
+      toast({ title: "Profile updated", description: "Your changes have been saved." });
     },
   });
 }
@@ -33,6 +35,7 @@ export function useUploadAvatar() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["profile", "me"] });
       queryClient.invalidateQueries({ queryKey: ["users"] });
+      toast({ title: "Avatar updated", description: "Your new photo is set." });
     },
   });
 }
@@ -62,6 +65,7 @@ export function useCheckIn() {
     mutationFn: checkIn,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["attendance"] });
+      toast({ title: "Checked in", description: "Have a great day!" });
     },
   });
 }
@@ -72,6 +76,7 @@ export function useCheckOut() {
     mutationFn: checkOut,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["attendance"] });
+      toast({ title: "Checked out", description: "See you tomorrow!" });
     },
   });
 }
@@ -91,6 +96,7 @@ export function useCreateLeave() {
     mutationFn: (data: CreateLeaveData) => createLeaveRequest(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["leave"] });
+      toast({ title: "Leave submitted", description: "Your request is pending approval." });
     },
   });
 }

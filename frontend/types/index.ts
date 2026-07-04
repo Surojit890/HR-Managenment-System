@@ -97,3 +97,26 @@ export interface ApiError {
   message: string;
   statusCode?: number;
 }
+
+export interface AuditLog {
+  id: string;
+  userId: string | null;
+  action: string;
+  ip: string | null;
+  userAgent: string | null;
+  metadata: string | null;
+  createdAt: string;
+  user: {
+    id: string;
+    employeeId: string;
+    email: string;
+    role: Role;
+  } | null;
+}
+
+export interface AuditLogResponse {
+  items: AuditLog[];
+  total: number;
+  page: number;
+  pageSize: number;
+}

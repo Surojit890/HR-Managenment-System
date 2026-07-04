@@ -10,6 +10,9 @@ const schema = z
   .object({
     employeeId: z.string().min(1, "Employee ID is required"),
     email: z.string().email("Enter a valid email"),
+    firstName: z.string().min(1, "First name is required"),
+    lastName: z.string().min(1, "Last name is required"),
+    designation: z.string().min(1, "Designation is required"),
     password: z.string().min(8, "Password must be at least 8 characters"),
     confirmPassword: z.string(),
     role: z.enum(["ADMIN", "EMPLOYEE"]),
@@ -68,6 +71,9 @@ export function SignupForm() {
       <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-5">
         {field("employeeId", "Employee ID", "text", "EMP-001")}
         {field("email", "Email", "email", "you@company.com")}
+        {field("firstName", "First Name", "text", "Alice")}
+        {field("lastName", "Last Name", "text", "Williams")}
+        {field("designation", "Designation", "text", "Senior Developer")}
         {field("password", "Password", "password", "Min. 8 characters")}
         {field("confirmPassword", "Confirm Password", "password", "••••••••")}
 

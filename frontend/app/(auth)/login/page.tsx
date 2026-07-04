@@ -77,6 +77,11 @@ export default function LoginPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {typeof window !== "undefined" && new URLSearchParams(window.location.search).get("password_set") && (
+            <div className="mb-4 rounded-md bg-emerald-50 p-3 text-sm text-emerald-700">
+              Password set successfully! You can now sign in.
+            </div>
+          )}
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-1">
               <Label htmlFor="email">Email</Label>
@@ -91,7 +96,15 @@ export default function LoginPage() {
               )}
             </div>
             <div className="space-y-1">
-              <Label htmlFor="password">Password</Label>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="password">Password</Label>
+                <a
+                  href="/forgot-password"
+                  className="text-xs text-blue-600 hover:text-blue-800 hover:underline"
+                >
+                  Forgot password?
+                </a>
+              </div>
               <Input
                 id="password"
                 type="password"

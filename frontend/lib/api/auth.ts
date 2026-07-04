@@ -8,10 +8,17 @@ export interface LoginData {
 }
 
 export interface RegisterData {
-  employeeId: string;
+  employeeId?: string;
   email: string;
-  password: string;
   role: "ADMIN" | "EMPLOYEE";
+  firstName: string;
+  lastName: string;
+  designation: string;
+}
+
+export interface SetupPasswordData {
+  token: string;
+  password: string;
 }
 
 export interface LoginResponse {
@@ -25,6 +32,18 @@ export const loginUser = (data: LoginData) =>
 export const registerUser = (data: RegisterData) =>
   api.post<Omit<User, "isVerified">>("/auth/register", data).then((r) => r.data);
 
+export const refreshAccessToken = () =>
+  api.post<{ access_token: string }>("/auth/refresh").then((r) => r.data);
+
+export const logoutUser = () =>
+  api.post<{ message: string }>("/auth/logout").then((r) => r.data);
+
+export const setupPassword = (data: SetupPasswordData) =>
+  api.post<{ message: string }>("/auth/setup-password", data).then((r) => r.data);
+
+export const forgotPassword = (email: string) =>
+  api.post<{ message: string }>("/auth/forgot-password", { email }).then((r) => r.data);
+
 export async function getMe(): Promise<User> {
   const { data } = await api.get<User>("/auth/me");
   return data;
@@ -36,11 +55,9 @@ export const verifyAccount = (token: string) =>
 export const resendVerification = (email: string) =>
   api.post<{ message: string }>("/auth/resend-verification", { email }).then((r) => r.data);
 
-// ─── Convenience aliases used by inline page implementations ─────────────────
 export const login = loginUser;
 export const register = registerUser;
 
-/** Persists the JWT so both the axios interceptor and Next.js middleware can read it. */
 export function setAuthToken(token: string) {
   Cookies.set("access_token", token, { expires: 7, sameSite: "strict" });
 }

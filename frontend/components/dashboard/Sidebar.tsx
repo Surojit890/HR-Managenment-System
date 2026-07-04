@@ -13,10 +13,12 @@ import {
   LogOut,
   Menu,
   X,
+  ShieldCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
+import { logoutUser } from "@/lib/api/auth";
 
 interface NavItem {
   label: string;
@@ -30,6 +32,7 @@ const adminNav: NavItem[] = [
   { label: "Attendance", href: "/admin/attendance", icon: CalendarClock },
   { label: "Leave", href: "/admin/leave", icon: CalendarDays },
   { label: "Payroll", href: "/admin/payroll", icon: CreditCard },
+  { label: "Audit Logs", href: "/admin/audit", icon: ShieldCheck },
 ];
 
 const employeeNav: NavItem[] = [
@@ -60,7 +63,10 @@ export function Sidebar() {
     } catch {}
   }, [collapsed]);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      await logoutUser();
+    } catch {}
     Cookies.remove("access_token");
     window.location.href = "/login";
   };

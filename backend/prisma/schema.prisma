@@ -30,24 +30,41 @@ enum LeaveStatus {
 }
 
 model User {
-  id          String           @id @default(uuid())
-  employeeId  String           @unique
-  email       String           @unique
-  password    String
-  role        Role             @default(EMPLOYEE)
-  isVerified  Boolean          @default(false)
-  verifyToken String?
-  verifyTokenExpires DateTime?
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
+  id                     String           @id @default(uuid())
+  employeeId             String           @unique
+  email                  String           @unique
+  password               String?
+  role                   Role             @default(EMPLOYEE)
+  isVerified             Boolean          @default(false)
+  verifyToken            String?
+  verifyTokenExpires     DateTime?
+  passwordSetupToken     String?
+  passwordSetupExpires   DateTime?
+  createdAt              DateTime         @default(now())
+  updatedAt              DateTime         @updatedAt
 
-  profile     EmployeeProfile?
-  attendance  Attendance[]
-  leaves      LeaveRequest[]
-  payroll     Payroll[]
-  documents   Document[]
+  profile               EmployeeProfile?
+  attendance            Attendance[]
+  leaves                LeaveRequest[]
+  payroll               Payroll[]
+  documents             Document[]
+  auditLogs             AuditLog[]
 
   @@map("users")
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  userId     String?
+  action     String
+  ip         String?
+  userAgent  String?
+  metadata   String?
+  createdAt  DateTime @default(now())
+
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@map("audit_logs")
 }
 
 model EmployeeProfile {

@@ -33,12 +33,28 @@ import { initials, formatDate, avatarUrl } from "@/lib/format";
 import type { UserWithProfile } from "@/types";
 
 const createSchema = z.object({
-  employeeId: z.string().min(1, "Required"),
   email: z.string().email("Valid email required"),
-  password: z.string().min(8, "Min 8 characters"),
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
   role: z.enum(["ADMIN", "EMPLOYEE"]),
+  designation: z.string().min(1, "Designation is required"),
 });
 type CreateFormValues = z.infer<typeof createSchema>;
+
+const DESIGNATIONS = [
+  "Software Engineer",
+  "Senior Developer",
+  "Frontend Developer",
+  "Backend Developer",
+  "DevOps Engineer",
+  "Marketing Manager",
+  "Sales Executive",
+  "Financial Analyst",
+  "HR Director",
+  "HR Manager",
+  "Product Manager",
+  "Project Manager",
+];
 
 export default function AdminEmployeesPage() {
   const { data: employees = [], isLoading } = useEmployees();
@@ -185,10 +201,18 @@ export default function AdminEmployeesPage() {
         >
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-1">
-              <Label htmlFor="ce-empid">Employee ID</Label>
-              <Input id="ce-empid" placeholder="EMP-010" {...register("employeeId")} />
-              {errors.employeeId && <p className="text-xs text-red-500">{errors.employeeId.message}</p>}
+              <Label htmlFor="ce-firstname">First Name</Label>
+              <Input id="ce-firstname" placeholder="e.g. Alice" {...register("firstName")} />
+              {errors.firstName && <p className="text-xs text-red-500">{errors.firstName.message}</p>}
             </div>
+            <div className="space-y-1">
+              <Label htmlFor="ce-lastname">Last Name</Label>
+              <Input id="ce-lastname" placeholder="e.g. Williams" {...register("lastName")} />
+              {errors.lastName && <p className="text-xs text-red-500">{errors.lastName.message}</p>}
+            </div>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-1">
               <Label htmlFor="ce-role">Role</Label>
               <select
@@ -200,18 +224,30 @@ export default function AdminEmployeesPage() {
                 <option value="ADMIN">Admin</option>
               </select>
             </div>
+            <div className="space-y-1">
+              <Label htmlFor="ce-designation">Designation</Label>
+              <select
+                id="ce-designation"
+                {...register("designation")}
+                className="w-full rounded-md border border-input bg-white px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+              >
+                <option value="">Select a designation</option>
+                {DESIGNATIONS.map((d) => (
+                  <option key={d} value={d}>{d}</option>
+                ))}
+              </select>
+              {errors.designation && <p className="text-xs text-red-500">{errors.designation.message}</p>}
+            </div>
+          </div>
+
+          <div className="rounded-md bg-blue-50 px-3 py-2 text-xs text-blue-700">
+            Employee ID will be auto-generated. A password setup link will be emailed to the employee.
           </div>
 
           <div className="space-y-1">
             <Label htmlFor="ce-email">Email</Label>
             <Input id="ce-email" type="email" placeholder="employee@company.com" {...register("email")} />
             {errors.email && <p className="text-xs text-red-500">{errors.email.message}</p>}
-          </div>
-
-          <div className="space-y-1">
-            <Label htmlFor="ce-password">Initial Password</Label>
-            <Input id="ce-password" type="password" placeholder="Min. 8 characters" {...register("password")} />
-            {errors.password && <p className="text-xs text-red-500">{errors.password.message}</p>}
           </div>
 
           {createEmployee.error && (

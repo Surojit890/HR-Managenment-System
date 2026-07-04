@@ -3,6 +3,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getUsers } from "@/lib/api/users";
 import { registerUser } from "@/lib/api/auth";
+import { getAuditLogs } from "@/lib/api/audit";
 import { getLeaveRequests, updateLeaveRequest } from "@/lib/api/leave";
 import { getAttendance } from "@/lib/api/attendance";
 import {
@@ -12,6 +13,7 @@ import {
 } from "@/lib/api/payroll";
 import type { AttendanceParams, LeaveParams } from "@/lib/api";
 import type { LeaveAction, PayrollUpdate } from "@/types";
+import { toast } from "@/lib/hooks/use-toast";
 
 const todayIso = () => new Date().toISOString().split("T")[0];
 
@@ -69,8 +71,15 @@ export function useApproveLeave() {
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: LeaveAction }) =>
       updateLeaveRequest(id, data),
-    onSuccess: () => {
+    onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["leave"] });
+      toast({
+        title: "Leave updated",
+        description:
+          variables.data.status === "APPROVED"
+            ? "Leave request approved."
+            : "Leave request rejected.",
+      });
     },
   });
 }
@@ -111,6 +120,7 @@ export function useUpdatePayroll() {
       queryClient.invalidateQueries({
         queryKey: ["payroll", "all"],
       });
+      toast({ title: "Payroll updated", description: "Salary structure saved." });
     },
   });
 }
@@ -132,10 +142,23 @@ export function useEmployees() {
 export function useCreateEmployee() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: { employeeId: string; email: string; password: string; role: "ADMIN" | "EMPLOYEE" }) =>
+    mutationFn: (data: { email: string; role: "ADMIN" | "EMPLOYEE"; firstName: string; lastName: string; designation: string }) =>
       registerUser(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
+      toast({ title: "Employee created", description: "A setup email has been sent." });
     },
+  });
+}
+
+export function useAuditLogs(params?: {
+  action?: string;
+  userId?: string;
+  page?: number;
+  pageSize?: number;
+}) {
+  return useQuery({
+    queryKey: ["audit", params ?? {}],
+    queryFn: () => getAuditLogs(params),
   });
 }
