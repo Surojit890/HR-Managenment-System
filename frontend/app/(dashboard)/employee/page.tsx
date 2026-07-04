@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { UserCircle, CalendarClock, CalendarDays, CreditCard, LogIn, LogOut } from "lucide-react";
+import { CalendarClock, CalendarDays, CreditCard, LogIn, LogOut } from "lucide-react";
 import { StatCard } from "@/components/dashboard/StatCard";
 import { SectionCard } from "@/components/dashboard/SectionCard";
 import { LeaveStatusBadge } from "@/components/leave/LeaveStatusBadge";
@@ -165,22 +165,6 @@ export default function EmployeeDashboardPage() {
         </SectionCard>
       </div>
 
-      {/* Quick nav */}
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        {[
-          { href: "/employee/profile", icon: UserCircle, label: "My Profile" },
-          { href: "/employee/attendance", icon: CalendarClock, label: "Attendance" },
-          { href: "/employee/leave", icon: CalendarDays, label: "Leave Requests" },
-          { href: "/employee/payroll", icon: CreditCard, label: "Payroll" },
-        ].map(({ href, icon: Icon, label }) => (
-          <Link key={href} href={href}>
-            <div className="flex items-center gap-3 rounded-xl border bg-white p-4 shadow-sm transition hover:shadow-md hover:border-blue-300">
-              <Icon className="h-5 w-5 text-blue-600" />
-              <span className="text-sm font-medium">{label}</span>
-            </div>
-          </Link>
-        ))}
-      </div>
     </div>
   );
 }

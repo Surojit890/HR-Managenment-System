@@ -17,18 +17,18 @@ services:
       mailpit:
         condition: service_started
     environment:
-      DATABASE_URL: "postgresql://postgres.[PROJECT_REF]:[PASSWORD]@aws-1-[REGION].pooler.supabase.com:5432/postgres"
-      JWT_SECRET: "hrms_dev_secret_key_2026"
-      JWT_REFRESH_SECRET: "hrms_dev_refresh_secret_2026"
-      JWT_EXPIRES_IN: "15m"
-      JWT_REFRESH_EXPIRES_IN: "7d"
-      FRONTEND_URL: "http://localhost:3000"
+      DATABASE_URL: "${DATABASE_URL}"
+      JWT_SECRET: "${JWT_SECRET}"
+      JWT_REFRESH_SECRET: "${JWT_REFRESH_SECRET}"
+      JWT_EXPIRES_IN: "${JWT_EXPIRES_IN:-15m}"
+      JWT_REFRESH_EXPIRES_IN: "${JWT_REFRESH_EXPIRES_IN:-7d}"
+      FRONTEND_URL: "${FRONTEND_URL:-http://localhost:3000}"
       PORT: "3001"
       SMTP_HOST: "mailpit"
       SMTP_PORT: "1025"
       SMTP_FROM: "noreply@hrms.com"
       APP_NAME: "HRMS"
-      CLOUDINARY_URL: "cloudinary://[API_KEY]:[API_SECRET]@[CLOUD_NAME]"
+      CLOUDINARY_URL: "${CLOUDINARY_URL}"
     ports:
       - "3001:3001"
 

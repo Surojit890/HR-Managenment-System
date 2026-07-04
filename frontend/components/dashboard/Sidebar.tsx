@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface NavItem {
   label: string;
@@ -45,6 +45,20 @@ export function Sidebar() {
   const isAdmin = pathname.startsWith("/admin");
   const nav = isAdmin ? adminNav : employeeNav;
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("hrms-sidebar-collapsed");
+      if (saved === "true") setCollapsed(true);
+    } catch {}
+  }, []);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("hrms-sidebar-collapsed", String(collapsed));
+    } catch {}
+  }, [collapsed]);
 
   const handleLogout = () => {
     Cookies.remove("access_token");
@@ -87,16 +101,38 @@ export function Sidebar() {
       )}
 
       {/* Desktop sidebar */}
-      <aside className="sticky top-0 hidden h-screen w-64 flex-col border-r border-slate-200 bg-white md:flex">
-        <div className="flex h-16 items-center px-6">
-          <span className="text-lg font-bold text-slate-900">
-            {isAdmin ? "Admin Portal" : "Employee Portal"}
-          </span>
+      <aside
+        className={cn(
+          "sticky top-0 hidden h-screen flex-col border-r border-slate-200 bg-white transition-[width] duration-300 md:flex",
+          collapsed ? "w-16" : "w-64"
+        )}
+      >
+        <div
+          className={cn(
+            "flex h-16 items-center px-4",
+            collapsed ? "justify-center" : "justify-between"
+          )}
+        >
+          {!collapsed && (
+            <span className="text-lg font-bold text-slate-900">
+              {isAdmin ? "Admin Portal" : "Employee Portal"}
+            </span>
+          )}
+          <button
+            type="button"
+            onClick={() => setCollapsed((c) => !c)}
+            className="rounded-md p-2 text-slate-600 hover:bg-slate-100"
+            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            <Menu className="h-5 w-5" />
+          </button>
         </div>
         <NavContent
           nav={nav}
           pathname={pathname}
           isAdmin={isAdmin}
+          collapsed={collapsed}
           onLogout={handleLogout}
         />
       </aside>
@@ -108,17 +144,24 @@ function NavContent({
   nav,
   pathname,
   isAdmin,
+  collapsed,
   onNavigate,
   onLogout,
 }: {
   nav: NavItem[];
   pathname: string;
   isAdmin: boolean;
+  collapsed?: boolean;
   onNavigate?: () => void;
   onLogout: () => void;
 }) {
   return (
-    <div className="flex flex-1 flex-col justify-between p-4">
+    <div
+      className={cn(
+        "flex flex-1 flex-col justify-between",
+        collapsed ? "p-2" : "p-4"
+      )}
+    >
       <nav className="space-y-1">
         {nav.map((item) => {
           const isRootDashboard = item.href === "/admin" || item.href === "/employee";
@@ -130,31 +173,42 @@ function NavContent({
               key={item.href}
               href={item.href}
               onClick={onNavigate}
+              title={collapsed ? item.label : undefined}
               className={cn(
-                "flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-colors",
+                "flex items-center rounded-md py-2.5 text-sm font-medium transition-colors",
+                collapsed ? "justify-center px-2" : "gap-3 px-3",
                 active
                   ? "bg-slate-900 text-white"
                   : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
               )}
             >
-              <item.icon className="h-4 w-4" />
-              {item.label}
+              <item.icon className="h-4 w-4 shrink-0" />
+              <span className={cn(collapsed && "sr-only")}>{item.label}</span>
             </Link>
           );
         })}
       </nav>
 
-      <div className="border-t border-slate-200 pt-4">
-        <div className="mb-3 px-3 text-xs font-semibold uppercase tracking-wider text-slate-400">
+      <div className={cn("border-t border-slate-200 pt-4", collapsed && "px-2")}>
+        <div
+          className={cn(
+            "mb-3 px-3 text-xs font-semibold uppercase tracking-wider text-slate-400",
+            collapsed && "sr-only"
+          )}
+        >
           {isAdmin ? "Admin" : "Employee"}
         </div>
         <Button
           variant="ghost"
-          className="w-full justify-start text-slate-600 hover:text-red-600"
+          className={cn(
+            "flex items-center text-slate-600 hover:text-red-600",
+            collapsed ? "w-full justify-center px-2" : "w-full justify-start"
+          )}
           onClick={onLogout}
+          title={collapsed ? "Log out" : undefined}
         >
-          <LogOut className="mr-2 h-4 w-4" />
-          Log out
+          <LogOut className={cn("h-4 w-4", !collapsed && "mr-2")} />
+          <span className={cn(collapsed && "sr-only")}>Log out</span>
         </Button>
       </div>
     </div>
