@@ -2,8 +2,24 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { refreshAccessToken } from "./auth";
 
+export function getApiBaseUrl(): string {
+  const configured = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
+  const isLocal = configured.includes("localhost") || configured.includes("127.0.0.1");
+  if (typeof window !== "undefined" && isLocal) {
+    try {
+      const parsed = new URL(configured);
+      const { protocol } = window.location;
+      return `${protocol}//${window.location.hostname}:${parsed.port || "3001"}`;
+    } catch {
+      const { protocol, hostname } = window.location;
+      return `${protocol}//${hostname}:3001`;
+    }
+  }
+  return configured;
+}
+
 export const api = axios.create({
-  baseURL: `${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001"}/api`,
+  baseURL: `${getApiBaseUrl()}/api`,
   headers: { "Content-Type": "application/json" },
   withCredentials: true,
 });

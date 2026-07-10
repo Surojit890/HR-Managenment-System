@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/tabs";
 import { useMyPayroll, useMyProfile, useUpdateProfile, useUploadAvatar } from "@/lib/hooks/useEmployee";
 import { formatCurrency, initials, avatarUrl } from "@/lib/format";
+import { getApiBaseUrl } from "@/lib/api/client";
 
 // ─── Schemas ──────────────────────────────────────────────────────────────────
 
@@ -113,8 +114,7 @@ export default function EmployeeProfilePage() {
     if (!file) return;
     try {
       await uploadAvatar(file);
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
-      setAvatarSrc(`${baseUrl}/uploads/avatars/${file.name}`);
+      setAvatarSrc(`${getApiBaseUrl()}/uploads/avatars/${file.name}`);
     } catch {
       // error handled by uploadError state
     }
