@@ -14,9 +14,12 @@ import {
   Menu,
   X,
   ShieldCheck,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { useEffect, useState } from "react";
 import { logoutUser } from "@/lib/api/auth";
 
@@ -73,28 +76,27 @@ export function Sidebar() {
 
   return (
     <>
-      {/* Mobile top bar */}
-      <div className="fixed left-0 right-0 top-0 z-40 flex h-16 items-center justify-between border-b border-slate-200 bg-white px-4 md:hidden">
-        <span className="text-lg font-bold text-slate-900">
-          {isAdmin ? "Admin Portal" : "Employee Portal"}
-        </span>
+      <div className="fixed left-0 right-0 top-0 z-40 flex h-16 items-center justify-between border-b border-border bg-card px-4 md:hidden">
+        <Link href={isAdmin ? "/admin" : "/employee"} className="flex items-center gap-2">
+          <BrandIcon />
+          <span className="text-lg font-bold text-foreground">HRMS</span>
+        </Link>
         <button
           type="button"
           onClick={() => setMobileOpen(!mobileOpen)}
-          className="rounded-md p-2 text-slate-600 hover:bg-slate-100"
+          className="rounded-md p-2 text-muted-foreground hover:bg-muted"
         >
           {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </div>
 
-      {/* Mobile drawer */}
       {mobileOpen && (
         <div className="fixed inset-0 z-30 flex md:hidden">
           <div
-            className="flex-1 bg-black/50"
+            className="flex-1 bg-black/60"
             onClick={() => setMobileOpen(false)}
           />
-          <aside className="w-64 bg-white p-4 shadow-xl">
+          <aside className="w-72 bg-card p-4 shadow-xl">
             <NavContent
               nav={nav}
               pathname={pathname}
@@ -106,32 +108,41 @@ export function Sidebar() {
         </div>
       )}
 
-      {/* Desktop sidebar */}
       <aside
         className={cn(
-          "sticky top-0 hidden h-screen flex-col border-r border-slate-200 bg-white transition-[width] duration-300 md:flex",
-          collapsed ? "w-16" : "w-64"
+          "sticky top-0 hidden h-screen flex-col border-r border-border bg-card transition-[width] duration-300 md:flex",
+          collapsed ? "w-20" : "w-64"
         )}
       >
         <div
           className={cn(
-            "flex h-16 items-center px-4",
+            "flex h-16 items-center border-b border-border px-4",
             collapsed ? "justify-center" : "justify-between"
           )}
         >
-          {!collapsed && (
-            <span className="text-lg font-bold text-slate-900">
-              {isAdmin ? "Admin Portal" : "Employee Portal"}
-            </span>
-          )}
+          <Link
+            href={isAdmin ? "/admin" : "/employee"}
+            className={cn(
+              "flex items-center gap-2",
+              collapsed && "hidden"
+            )}
+          >
+            <BrandIcon />
+            <span className="text-lg font-bold text-foreground">HRMS</span>
+          </Link>
+          {collapsed && <BrandIcon />}
           <button
             type="button"
             onClick={() => setCollapsed((c) => !c)}
-            className="rounded-md p-2 text-slate-600 hover:bg-slate-100"
+            className="rounded-md p-1.5 text-muted-foreground hover:bg-muted"
             aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
             title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
-            <Menu className="h-5 w-5" />
+            {collapsed ? (
+              <ChevronRight className="h-4 w-4" />
+            ) : (
+              <ChevronLeft className="h-4 w-4" />
+            )}
           </button>
         </div>
         <NavContent
@@ -143,6 +154,29 @@ export function Sidebar() {
         />
       </aside>
     </>
+  );
+}
+
+function BrandIcon() {
+  return (
+    <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 text-white shadow-lg shadow-indigo-500/20">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z" />
+        <path d="M13 5v2" />
+        <path d="M13 17v2" />
+        <path d="M13 11v2" />
+      </svg>
+    </span>
   );
 }
 
@@ -164,11 +198,11 @@ function NavContent({
   return (
     <div
       className={cn(
-        "flex flex-1 flex-col justify-between",
-        collapsed ? "p-2" : "p-4"
+        "flex flex-1 flex-col justify-between overflow-hidden",
+        collapsed ? "p-3" : "p-4"
       )}
     >
-      <nav className="space-y-1">
+      <nav className="space-y-1.5">
         {nav.map((item) => {
           const isRootDashboard = item.href === "/admin" || item.href === "/employee";
           const active = isRootDashboard
@@ -181,41 +215,46 @@ function NavContent({
               onClick={onNavigate}
               title={collapsed ? item.label : undefined}
               className={cn(
-                "flex items-center rounded-md py-2.5 text-sm font-medium transition-colors",
+                "flex items-center rounded-xl py-2.5 text-sm font-medium transition-all",
                 collapsed ? "justify-center px-2" : "gap-3 px-3",
                 active
-                  ? "bg-slate-900 text-white"
-                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                  ? "bg-primary text-primary-foreground shadow-md shadow-primary/20"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
               )}
             >
-              <item.icon className="h-4 w-4 shrink-0" />
+              <item.icon className="h-[18px] w-[18px] shrink-0" />
               <span className={cn(collapsed && "sr-only")}>{item.label}</span>
             </Link>
           );
         })}
       </nav>
 
-      <div className={cn("border-t border-slate-200 pt-4", collapsed && "px-2")}>
+      <div className={cn("border-t border-border pt-4", collapsed && "px-1")}>
         <div
           className={cn(
-            "mb-3 px-3 text-xs font-semibold uppercase tracking-wider text-slate-400",
+            "mb-3 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground",
             collapsed && "sr-only"
           )}
         >
-          {isAdmin ? "Admin" : "Employee"}
+          {isAdmin ? "Admin Portal" : "Employee Portal"}
         </div>
-        <Button
-          variant="ghost"
-          className={cn(
-            "flex items-center text-slate-600 hover:text-red-600",
-            collapsed ? "w-full justify-center px-2" : "w-full justify-start"
-          )}
-          onClick={onLogout}
-          title={collapsed ? "Log out" : undefined}
-        >
-          <LogOut className={cn("h-4 w-4", !collapsed && "mr-2")} />
-          <span className={cn(collapsed && "sr-only")}>Log out</span>
-        </Button>
+        <div className={cn("flex items-center", collapsed ? "justify-center" : "justify-between gap-2")}>
+          <Button
+            variant="ghost"
+            className={cn(
+              "flex items-center text-muted-foreground hover:text-foreground",
+              collapsed ? "h-9 w-9 justify-center px-0" : "w-full justify-start"
+            )}
+            onClick={onLogout}
+            title="Log out"
+          >
+            <LogOut className={cn("h-[18px] w-[18px]", !collapsed && "mr-2")} />
+            <span className={cn(collapsed && "sr-only")}>Log out</span>
+          </Button>
+          <div className={cn(collapsed && "hidden")}>
+            <ThemeToggle />
+          </div>
+        </div>
       </div>
     </div>
   );

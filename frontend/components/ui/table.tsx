@@ -24,7 +24,7 @@ export function TableHeader({
   ...props
 }: React.HTMLAttributes<HTMLTableSectionElement>) {
   return (
-    <thead className={cn("border-b border-slate-200", className)} {...props}>
+    <thead className={cn("border-b border-border", className)} {...props}>
       {children}
     </thead>
   );
@@ -37,7 +37,7 @@ export function TableBody({
 }: React.HTMLAttributes<HTMLTableSectionElement>) {
   return (
     <tbody
-      className={cn("divide-y divide-slate-100", className)}
+      className={cn("divide-y divide-border", className)}
       {...props}
     >
       {children}
@@ -53,7 +53,7 @@ export function TableRow({
   return (
     <tr
       className={cn(
-        "transition-colors hover:bg-slate-50/50 data-[state=selected]:bg-slate-50",
+        "transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted",
         className
       )}
       {...props}
@@ -71,7 +71,7 @@ export function TableHead({
   return (
     <th
       className={cn(
-        "h-12 px-4 text-left align-middle font-medium text-slate-500",
+        "h-12 px-4 text-left align-middle font-medium text-muted-foreground",
         className
       )}
       {...props}
@@ -88,7 +88,7 @@ export function TableCell({
 }: React.TdHTMLAttributes<HTMLTableCellElement>) {
   return (
     <td
-      className={cn("p-4 align-middle text-slate-700", className)}
+      className={cn("p-4 align-middle text-foreground/90", className)}
       {...props}
     >
       {children}
@@ -105,7 +105,7 @@ export function TableEmpty({
 }) {
   return (
     <TableRow>
-      <TableCell colSpan={colSpan} className="h-24 text-center text-slate-500">
+      <TableCell colSpan={colSpan} className="h-24 text-center text-muted-foreground">
         {children}
       </TableCell>
     </TableRow>

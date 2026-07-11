@@ -35,7 +35,7 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
+  --primary: oklch(0.55 0.22 278);
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
@@ -47,30 +47,30 @@
   --destructive-foreground: oklch(0.985 0 0);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --radius: 0.625rem;
+  --ring: oklch(0.55 0.22 278);
+  --radius: 0.75rem;
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
+  --background: #0b0d12;
+  --foreground: #f8fafc;
+  --card: #151821;
+  --card-foreground: #f8fafc;
+  --popover: #1c1f2a;
+  --popover-foreground: #f8fafc;
+  --primary: #6366f1;
+  --primary-foreground: #ffffff;
+  --secondary: #1f2937;
+  --secondary-foreground: #f8fafc;
+  --muted: #1f2937;
+  --muted-foreground: #94a3b8;
+  --accent: #8b5cf6;
+  --accent-foreground: #ffffff;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: #1f2937;
+  --input: #1f2937;
+  --ring: #6366f1;
 }
 
 @layer base {
@@ -80,4 +80,131 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.dark [class*="bg-white"],
+.dark [class*="bg-slate-50"],
+.dark [class*="bg-slate-100"] {
+  background-color: var(--muted);
+}
+
+.dark [class*="bg-slate-200"] {
+  background-color: var(--border);
+}
+
+.dark [class*="bg-slate-900"] {
+  background-color: var(--primary);
+}
+
+.dark [class*="text-slate-900"],
+.dark [class*="text-slate-800"],
+.dark [class*="text-slate-950"] {
+  color: var(--foreground);
+}
+
+.dark [class*="text-slate-700"],
+.dark [class*="text-slate-600"],
+.dark [class*="text-slate-500"] {
+  color: var(--muted-foreground);
+}
+
+.dark [class*="text-slate-400"] {
+  color: color-mix(in srgb, var(--muted-foreground) 70%, transparent);
+}
+
+.dark [class*="border-slate-200"],
+.dark [class*="border-slate-100"] {
+  border-color: var(--border);
+}
+
+.dark [class*="divide-slate-100"],
+.dark [class*="divide-slate-200"] {
+  border-color: var(--border);
+}
+
+.dark [class*="hover:bg-slate-100"]:hover {
+  background-color: var(--muted);
+}
+
+.dark [class*="hover:text-slate-900"]:hover {
+  color: var(--foreground);
+}
+
+.dark [class*="hover:border-slate-300"]:hover {
+  border-color: color-mix(in srgb, var(--border) 80%, transparent);
+}
+
+.dark [class*="text-emerald-700"] {
+  color: #34d399;
+}
+
+.dark [class*="text-emerald-600"] {
+  color: #34d399;
+}
+
+.dark [class*="bg-emerald-50"],
+.dark [class*="bg-emerald-100"] {
+  background-color: rgb(52 211 153 / 0.12);
+}
+
+.dark [class*="text-blue-700"] {
+  color: #60a5fa;
+}
+
+.dark [class*="text-blue-600"] {
+  color: #60a5fa;
+}
+
+.dark [class*="bg-blue-50"],
+.dark [class*="bg-blue-100"] {
+  background-color: rgb(96 165 250 / 0.12);
+}
+
+.dark [class*="text-amber-700"] {
+  color: #fbbf24;
+}
+
+.dark [class*="text-amber-600"] {
+  color: #fbbf24;
+}
+
+.dark [class*="bg-amber-50"],
+.dark [class*="bg-amber-100"] {
+  background-color: rgb(251 191 36 / 0.12);
+}
+
+.dark [class*="text-violet-600"] {
+  color: #a78bfa;
+}
+
+.dark [class*="bg-violet-50"],
+.dark [class*="bg-violet-100"] {
+  background-color: rgb(139 92 246 / 0.12);
+}
+
+.dark [class*="text-red-600"],
+.dark [class*="text-red-700"] {
+  color: #fca5a5;
+}
+
+.dark [class*="bg-red-50"],
+.dark [class*="bg-red-100"] {
+  background-color: rgb(248 113 113 / 0.12);
+}
+
+.dark [class*="text-green-700"] {
+  color: #86efac;
+}
+
+.dark [class*="bg-green-50"],
+.dark [class*="bg-green-100"] {
+  background-color: rgb(74 222 128 / 0.12);
+}
+
+.dark [class*="ring-slate-200"] {
+  --tw-ring-color: var(--border);
+}
+
+.dark [class*="focus:ring-blue-200"]:focus {
+  --tw-ring-color: rgb(99 102 241 / 0.3);
 }

@@ -15,12 +15,12 @@ export function Dialog({ open, onOpenChange, children }: DialogProps) {
   if (!open) return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div
-        className="absolute inset-0 bg-black/50"
+        className="absolute inset-0 bg-black/70"
         onClick={() => onOpenChange(false)}
       />
-      <div className="relative z-10 max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-lg bg-white p-6 shadow-xl">
+      <div className="relative z-10 max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-xl border border-border bg-card p-6 shadow-2xl">
         {children}
       </div>
     </div>,
@@ -52,7 +52,7 @@ export function DialogTitle({
   return (
     <h2
       className={cn(
-        "text-lg font-semibold leading-none tracking-tight text-slate-900",
+        "text-lg font-semibold leading-none tracking-tight text-foreground",
         className
       )}
     >
@@ -69,7 +69,7 @@ export function DialogDescription({
   children: React.ReactNode;
 }) {
   return (
-    <p className={cn("text-sm text-slate-500", className)}>{children}</p>
+    <p className={cn("text-sm text-muted-foreground", className)}>{children}</p>
   );
 }
 
@@ -85,7 +85,7 @@ export function DialogClose({
       type="button"
       onClick={onClick}
       className={cn(
-        "absolute right-4 top-4 rounded-sm text-slate-400 hover:text-slate-600",
+        "absolute right-4 top-4 rounded-sm text-muted-foreground hover:text-foreground",
         className
       )}
     >

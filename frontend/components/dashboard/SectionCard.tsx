@@ -11,8 +11,8 @@ interface SectionCardProps {
 export function SectionCard({ title, children, action, className }: SectionCardProps) {
   return (
     <Card className={cn(className)}>
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="text-base font-semibold">{title}</CardTitle>
+      <CardHeader className="flex flex-row items-center justify-between pb-3">
+        <CardTitle className="text-base font-semibold text-foreground">{title}</CardTitle>
         {action}
       </CardHeader>
       <CardContent>{children}</CardContent>

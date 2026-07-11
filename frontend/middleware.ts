@@ -19,6 +19,11 @@ function defaultDashboard(role?: string) {
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  if (/\.[\w]+$/.test(pathname)) {
+    return NextResponse.next();
+  }
+
   const token = request.cookies.get("access_token")?.value;
   const payload = token ? decodeToken(token) : null;
 
