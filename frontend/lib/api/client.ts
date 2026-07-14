@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 import { refreshAccessToken } from "./auth";
 
 export function getApiBaseUrl(): string {
-  const configured = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
+  const configured = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
   const isLocal = configured.includes("localhost") || configured.includes("127.0.0.1");
   if (typeof window !== "undefined" && isLocal) {
     try {
