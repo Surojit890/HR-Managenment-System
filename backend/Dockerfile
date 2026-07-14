@@ -34,4 +34,4 @@ RUN npm install prisma@5.22.0 && npm install -g tsx@4.19.2
 
 EXPOSE 3001
 
-CMD ["sh", "-c", "npx prisma migrate resolve --rolled-back 20260711000000_enable_rls_audit_logs 2>/dev/null || true; npx prisma migrate deploy && node dist/src/main.js"]
+CMD ["sh", "-c", "npx prisma migrate deploy && node dist/src/main.js"]
