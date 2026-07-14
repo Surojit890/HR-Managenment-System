@@ -9,28 +9,28 @@ DROP POLICY IF EXISTS "audit_logs_service_select" ON "public"."audit_logs";
 DROP POLICY IF EXISTS "audit_logs_service_update" ON "public"."audit_logs";
 DROP POLICY IF EXISTS "audit_logs_service_delete" ON "public"."audit_logs";
 
--- Allow the service_role (backend) full access.
+-- Allow the backend service role full access.
 CREATE POLICY "audit_logs_service_insert"
   ON "public"."audit_logs"
   FOR INSERT
-  TO service_role
+  TO postgres
   WITH CHECK (true);
 
 CREATE POLICY "audit_logs_service_select"
   ON "public"."audit_logs"
   FOR SELECT
-  TO service_role
+  TO postgres
   USING (true);
 
 CREATE POLICY "audit_logs_service_update"
   ON "public"."audit_logs"
   FOR UPDATE
-  TO service_role
+  TO postgres
   USING (true)
   WITH CHECK (true);
 
 CREATE POLICY "audit_logs_service_delete"
   ON "public"."audit_logs"
   FOR DELETE
-  TO service_role
+  TO postgres
   USING (true);
